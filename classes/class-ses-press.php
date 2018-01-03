@@ -23,15 +23,43 @@ class Ses_Press {
 	/**
 	 * Method to send mail using SES
 	 *
+	 * @param array $args    Mail configurations.
 	 * @return array
 	 */
-	public function send_mail() {
+	public static function send( $args ) {
 
 		if ( ! self::are_mails_enabled() ) {
 			return array(
 				'success' => false,
 				'data' => 'mails_disabled',
 			);
+		}
+
+		$sespress = new self;
+		$sespress->set_subject( $args['subject'] );
+		$sespress->set_sender( self::get_formatted_address( $args['sender']['name'], $args['sender']['email'] ) );
+
+		$recipients = [];
+		foreach ( $args['recipients'] as $recipient ) {
+			array_push( $recipients, self::get_formatted_address( $recipient['name'], $recipient['email'] ) );
+		}
+		$sespress->set_recipients( $recipients );
+
+		if ( array_key_exists( 'message', $args ) ) {
+			if ( array_key_exists( 'html', $args['message'] ) ) {
+				$sespress->set_message( $args['message']['html'] );
+			}
+			if ( array_key_exists( 'text', $args['message'] ) ) {
+				$sespress->set_message( $args['message']['text'], 'text' );
+			}
+		}
+
+		if ( array_key_exists( 'template', $args ) ) {
+			$template = $args['template'];
+			if ( array_key_exists( 'path', $args['template'] ) ) {
+				$template['meta'] = array_key_exists( 'meta', $template ) ? $template['meta'] : [];
+				$sespress->set_mail_template( $template['path'], $template['meta'] );
+			}
 		}
 
 		$client = SesClient::factory(array(
@@ -46,25 +74,25 @@ class Ses_Press {
 		try {
 			$result = $client->sendEmail([
 				'Destination' => [
-					'ToAddresses' => $this->recipients,
+					'ToAddresses' => $sespress->recipients,
 				],
 				'Message' => [
 					'Body' => [
 						'Html' => [
 							'Charset' => CHARSET,
-							'Data' => ( isset( $this->message['html'] ) && $this->message['html'] ) ? $this->message['html'] : '',
+							'Data' => ( isset( $sespress->message['html'] ) && $sespress->message['html'] ) ? $sespress->message['html'] : '',
 						],
 						'Text' => [
 							'Charset' => CHARSET,
-							'Data' => ( isset( $this->message['text'] ) && $this->message['text'] ) ? $this->message['text'] : '',
+							'Data' => ( isset( $sespress->message['text'] ) && $sespress->message['text'] ) ? $sespress->message['text'] : '',
 						],
 					],
 					'Subject' => [
 						'Charset' => CHARSET,
-						'Data' => $this->subject,
+						'Data' => $sespress->subject,
 					],
 				],
-				'Source' => $this->from ? $this->from : get_option( 'ses_press_default_sender' ),
+				'Source' => $sespress->from ? $sespress->from : get_option( 'ses_press_default_sender' ),
 			]);
 			$message_id = $result->get( 'MessageId' );
 			return array(
@@ -100,7 +128,7 @@ class Ses_Press {
 	 * @param string $email    Email of recipient/sender.
 	 * @return string
 	 */
-	public static function get_formatted_address( $name, $email ) {
+	protected static function get_formatted_address( $name, $email ) {
 		return $name . ' <' . $email . '>';
 	}
 
@@ -136,7 +164,7 @@ class Ses_Press {
 	 *
 	 * @return string
 	 */
-	public function get_subject() {
+	protected function get_subject() {
 		return $this->subject;
 	}
 
@@ -146,7 +174,7 @@ class Ses_Press {
 	 * @param string $subject    Subject string.
 	 * @return void
 	 */
-	public function set_subject( $subject ) {
+	protected function set_subject( $subject ) {
 		if ( self::is_test_mode() ) {
 			$this->subject = 'Test - ' . $subject;
 			return;
@@ -160,7 +188,7 @@ class Ses_Press {
 	 * @param string $type    Type of message to return Possible values: html (default) or text.
 	 * @return string
 	 */
-	public function get_message( $type = 'html' ) {
+	protected function get_message( $type = 'html' ) {
 		return $this->message[ $type ];
 	}
 
@@ -171,7 +199,7 @@ class Ses_Press {
 	 * @param string $type     Message type. Possible values: html (default) or type.
 	 * @return void
 	 */
-	public function set_message( $message, $type = 'html' ) {
+	protected function set_message( $message, $type = 'html' ) {
 		if ( 'text' === strtolower( $type ) ) {
 			$this->message['text'] = $message;
 		} else {
@@ -184,7 +212,7 @@ class Ses_Press {
 	 *
 	 * @return array
 	 */
-	public function get_recipients() {
+	protected function get_recipients() {
 		return $this->recipients;
 	}
 
@@ -194,7 +222,7 @@ class Ses_Press {
 	 * @param array $recipients    Recipients to set.
 	 * @return void
 	 */
-	public function set_recipients( $recipients ) {
+	protected function set_recipients( $recipients ) {
 		if ( self::is_test_mode() ) {
 			$this->recipients = array(
 				self::get_formatted_address( self::get_test_mode_recipient_name(), self::get_test_mode_recipient_email() ),
@@ -209,7 +237,7 @@ class Ses_Press {
 	 *
 	 * @return array
 	 */
-	public function get_sender() {
+	protected function get_sender() {
 		return $this->recipients;
 	}
 
@@ -219,7 +247,7 @@ class Ses_Press {
 	 * @param string $sender    Sender string. Should be formatted before.
 	 * @return void
 	 */
-	public function set_sender( $sender ) {
+	protected function set_sender( $sender ) {
 		$this->from = $sender;
 	}
 
@@ -230,7 +258,7 @@ class Ses_Press {
 	 * @param array  $args    Dynamic values to be inserted in the mail template.
 	 * @return boolean
 	 */
-	public function set_mail_template( $template_name, $args = [] ) {
+	protected function set_mail_template( $template_name, $args = [] ) {
 
 		$template_path = locate_template( array( $template_name ), false, true );
 		if ( ! $template_path ) {
