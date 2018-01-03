@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: WordPress SES
+ * Plugin Name: SesPress
  * Plugin URI: https://coloredcow.com/wordpress
  * description: A plugin to send emails from Amazon SES
  * Version: 1.0
@@ -8,10 +8,10 @@
  * Author URI: https://coloredcow.com
  *
  * @package ColoredCow
- * @subpackage WordPress SES
+ * @subpackage SesPress
  */
 
 defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
 
-require_once 'includes/class-wordpress-ses.php';
+require_once 'classes/class-ses-press.php';
 require_once 'admin/settings.php';

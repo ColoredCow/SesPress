@@ -1,6 +1,6 @@
 <?php
 /**
- * Main file for CCSES class
+ * Main file for Ses_Press class
  *
  * @package ColoredCow
  * @subpackage SES
@@ -8,16 +8,16 @@
 
 define( 'CHARSET', 'UTF-8' );
 
-require_once  'vendor/autoload.php';
+require_once dirname( plugin_dir_path( __FILE__ ) ) . '/vendor/autoload.php';
 
 use Aws\Ses\Exception\SesException;
 use Aws\Ses\SesClient;
 
 /**
- * Class WordPress_SES
+ * Class Ses_Press
  * Primary wrapper around Amazon SESClient to instantiate and trigger mails
  */
-class WordPress_SES {
+class Ses_Press {
 	protected $recipients, $subject, $message, $from;
 
 	public function send_mail() {
@@ -31,10 +31,10 @@ class WordPress_SES {
 
 		$client = SesClient::factory(array(
 			'version' => 'latest',
-			'region' => get_option( 'ccses_region' ),
+			'region' => get_option( 'ses_press_region' ),
 			'credentials' => array(
-				'key'    => get_option( 'ccses_aws_access_key_id' ),
-				'secret' => get_option( 'ccses_aws_secret_access_key' ),
+				'key'    => get_option( 'ses_press_aws_access_key_id' ),
+				'secret' => get_option( 'ses_press_aws_secret_access_key' ),
 			),
 		));
 
@@ -59,7 +59,7 @@ class WordPress_SES {
 						'Data' => $this->subject,
 					],
 				],
-				'Source' => $this->from ? $this->from : get_option( 'ccses_default_sender' ),
+				'Source' => $this->from ? $this->from : get_option( 'ses_press_default_sender' ),
 			]);
 			$message_id = $result->get( 'MessageId' );
 			return array(
@@ -80,7 +80,7 @@ class WordPress_SES {
 	}
 
 	protected static function are_mails_enabled() {
-		return 'on' === get_option( 'ccses_enable_mails' );
+		return 'on' === get_option( 'ses_press_enable_mails' );
 	}
 
 	public static function get_formatted_address( $name, $email ) {
@@ -88,15 +88,15 @@ class WordPress_SES {
 	}
 
 	protected static function is_test_mode() {
-		return 'on' === get_option( 'ccses_test_mode' );
+		return 'on' === get_option( 'ses_press_test_mode' );
 	}
 
 	protected static function get_test_mode_recipient_name() {
-		return get_option( 'ccses_test_mode_recipient_name' );
+		return get_option( 'ses_press_test_mode_recipient_name' );
 	}
 
 	protected static function get_test_mode_recipient_email() {
-		return get_option( 'ccses_test_mode_recipient_email' );
+		return get_option( 'ses_press_test_mode_recipient_email' );
 	}
 
 	public function get_subject() {
