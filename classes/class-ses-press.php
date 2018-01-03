@@ -20,6 +20,11 @@ use Aws\Ses\SesClient;
 class Ses_Press {
 	protected $recipients, $subject, $message, $from;
 
+	/**
+	 * Method to send mail using SES
+	 *
+	 * @return array
+	 */
 	public function send_mail() {
 
 		if ( ! self::are_mails_enabled() ) {
@@ -79,30 +84,68 @@ class Ses_Press {
 		}
 	}
 
+	/**
+	 * Static method to check if mails are enabled
+	 *
+	 * @return boolean
+	 */
 	protected static function are_mails_enabled() {
 		return 'on' === get_option( 'ses_press_enable_mails' );
 	}
 
+	/**
+	 * Static method to format address using name and email
+	 *
+	 * @param string $name    Name of recipient/sender.
+	 * @param string $email    Email of recipient/sender.
+	 * @return string
+	 */
 	public static function get_formatted_address( $name, $email ) {
 		return $name . ' <' . $email . '>';
 	}
 
+	/**
+	 * Static method to check if test mode is enabled
+	 *
+	 * @return boolean
+	 */
 	protected static function is_test_mode() {
 		return 'on' === get_option( 'ses_press_test_mode' );
 	}
 
+	/**
+	 * Static method to fetch test mode recipient name configured from WP Dashboard.
+	 *
+	 * @return string
+	 */
 	protected static function get_test_mode_recipient_name() {
 		return get_option( 'ses_press_test_mode_recipient_name' );
 	}
 
+	/**
+	 * Static method to fetch test mode recipient email configured from WP Dashboard.
+	 *
+	 * @return string
+	 */
 	protected static function get_test_mode_recipient_email() {
 		return get_option( 'ses_press_test_mode_recipient_email' );
 	}
 
+	/**
+	 * Method to get subject of current instance
+	 *
+	 * @return string
+	 */
 	public function get_subject() {
 		return $this->subject;
 	}
 
+	/**
+	 * Method to set subject of current instance
+	 *
+	 * @param string $subject    Subject string.
+	 * @return void
+	 */
 	public function set_subject( $subject ) {
 		if ( self::is_test_mode() ) {
 			$this->subject = 'Test - ' . $subject;
@@ -111,10 +154,23 @@ class Ses_Press {
 		$this->subject = $subject;
 	}
 
+	/**
+	 * Method to get message body of current instance based on message type.
+	 *
+	 * @param string $type    Type of message to return Possible values: html (default) or text.
+	 * @return string
+	 */
 	public function get_message( $type = 'html' ) {
 		return $this->message[ $type ];
 	}
 
+	/**
+	 * Method to set message for current instance.
+	 *
+	 * @param string $message    Message string.
+	 * @param string $type     Message type. Possible values: html (default) or type.
+	 * @return void
+	 */
 	public function set_message( $message, $type = 'html' ) {
 		if ( 'text' === strtolower( $type ) ) {
 			$this->message['text'] = $message;
@@ -123,11 +179,22 @@ class Ses_Press {
 		}
 	}
 
+	/**
+	 * Method to get an array of recipients set for current instance
+	 *
+	 * @return array
+	 */
 	public function get_recipients() {
 		return $this->recipients;
 	}
 
-	public function set_recipients( array $recipients ) {
+	/**
+	 * Method to set recipients for current instance
+	 *
+	 * @param array $recipients    Recipients to set.
+	 * @return void
+	 */
+	public function set_recipients( $recipients ) {
 		if ( self::is_test_mode() ) {
 			$this->recipients = array(
 				self::get_formatted_address( self::get_test_mode_recipient_name(), self::get_test_mode_recipient_email() ),
@@ -137,15 +204,33 @@ class Ses_Press {
 		$this->recipients = $recipients;
 	}
 
+	/**
+	 * Method to set sender of current instance
+	 *
+	 * @return array
+	 */
 	public function get_sender() {
 		return $this->recipients;
 	}
 
+	/**
+	 * Method to set sender of current mail instance
+	 *
+	 * @param string $sender    Sender string. Should be formatted before.
+	 * @return void
+	 */
 	public function set_sender( $sender ) {
 		$this->from = $sender;
 	}
 
-	public function set_mail_template( $template_name, array $args = [] ) {
+	/**
+	 * Method to set mail template
+	 *
+	 * @param string $template_name    Path of the template.
+	 * @param array  $args    Dynamic values to be inserted in the mail template.
+	 * @return boolean
+	 */
+	public function set_mail_template( $template_name, $args = [] ) {
 
 		$template_path = locate_template( array( $template_name ), false, true );
 		if ( ! $template_path ) {
