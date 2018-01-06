@@ -35,32 +35,7 @@ class SesPress {
 			);
 		}
 
-		$sespress = new self;
-		$sespress->set_subject( $args['subject'] );
-		$sespress->set_sender( self::get_formatted_address( $args['sender']['name'], $args['sender']['email'] ) );
-
-		$recipients = [];
-		foreach ( $args['recipients'] as $recipient ) {
-			array_push( $recipients, self::get_formatted_address( $recipient['name'], $recipient['email'] ) );
-		}
-		$sespress->set_recipients( $recipients );
-
-		if ( array_key_exists( 'message', $args ) ) {
-			if ( array_key_exists( 'html', $args['message'] ) ) {
-				$sespress->set_message( $args['message']['html'] );
-			}
-			if ( array_key_exists( 'text', $args['message'] ) ) {
-				$sespress->set_message( $args['message']['text'], 'text' );
-			}
-		}
-
-		if ( array_key_exists( 'template', $args ) ) {
-			$template = $args['template'];
-			if ( array_key_exists( 'path', $args['template'] ) ) {
-				$template['meta'] = array_key_exists( 'meta', $template ) ? $template['meta'] : [];
-				$sespress->set_mail_template( $template['path'], $template['meta'] );
-			}
-		}
+		$this->set_configurations( $args );
 
 		$client = SesClient::factory(array(
 			'version' => 'latest',
@@ -74,25 +49,25 @@ class SesPress {
 		try {
 			$result = $client->sendEmail([
 				'Destination' => [
-					'ToAddresses' => $sespress->recipients,
+					'ToAddresses' => $this->recipients,
 				],
 				'Message' => [
 					'Body' => [
 						'Html' => [
 							'Charset' => CHARSET,
-							'Data' => ( isset( $sespress->message['html'] ) && $sespress->message['html'] ) ? $sespress->message['html'] : '',
+							'Data' => ( isset( $this->message['html'] ) && $this->message['html'] ) ? $this->message['html'] : '',
 						],
 						'Text' => [
 							'Charset' => CHARSET,
-							'Data' => ( isset( $sespress->message['text'] ) && $sespress->message['text'] ) ? $sespress->message['text'] : '',
+							'Data' => ( isset( $this->message['text'] ) && $this->message['text'] ) ? $this->message['text'] : '',
 						],
 					],
 					'Subject' => [
 						'Charset' => CHARSET,
-						'Data' => $sespress->subject,
+						'Data' => $this->subject,
 					],
 				],
-				'Source' => $sespress->from ? $sespress->from : get_option( 'sespress_default_sender' ),
+				'Source' => $this->from ? $this->from : get_option( 'sespress_default_sender' ),
 			]);
 			$message_id = $result->get( 'MessageId' );
 			return array(
@@ -109,6 +84,40 @@ class SesPress {
 				'success' => false,
 				'data' => $error->getMessage(),
 			);
+		}
+	}
+
+	/**
+	 * Method to set configurations for current instance
+	 *
+	 * @param array $args    Array of configurations to set.
+	 * @return void
+	 */
+	protected function set_configurations( $args ) {
+		$this->set_subject( $args['subject'] );
+		$this->set_sender( self::get_formatted_address( $args['sender']['name'], $args['sender']['email'] ) );
+
+		$recipients = [];
+		foreach ( $args['recipients'] as $recipient ) {
+			array_push( $recipients, self::get_formatted_address( $recipient['name'], $recipient['email'] ) );
+		}
+		$this->set_recipients( $recipients );
+
+		if ( array_key_exists( 'message', $args ) ) {
+			if ( array_key_exists( 'html', $args['message'] ) ) {
+				$this->set_message( $args['message']['html'] );
+			}
+			if ( array_key_exists( 'text', $args['message'] ) ) {
+				$this->set_message( $args['message']['text'], 'text' );
+			}
+		}
+
+		if ( array_key_exists( 'template', $args ) ) {
+			$template = $args['template'];
+			if ( array_key_exists( 'path', $args['template'] ) ) {
+				$template['meta'] = array_key_exists( 'meta', $template ) ? $template['meta'] : [];
+				$this->set_mail_template( $template['path'], $template['meta'] );
+			}
 		}
 	}
 
