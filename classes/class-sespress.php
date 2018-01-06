@@ -26,7 +26,7 @@ class SesPress {
 	 * @param array $args    Mail configurations.
 	 * @return array
 	 */
-	public static function send( $args ) {
+	public function send( $args ) {
 
 		if ( ! self::are_mails_enabled() ) {
 			return array(
