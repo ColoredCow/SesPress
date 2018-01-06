@@ -43,7 +43,8 @@ function sespress_send_sample() {
 			'html' => '<h2>Some test message embedded in HTML tags.</h2>',
 		]
 	];
-	$result = new Ses_Press::send_mail( $args );
-	wp_die($result['data']);
+	$sespress = new SesPress;
+	$result = $sespress->send( $args );
+	wp_die( $result['data'] );
 }
 ```
