@@ -1,6 +1,6 @@
 # SesPress
 
-WordPress plugin to send emails from Amazon's Simple Email Service.
+WordPress plugin to send emails using Amazon's Simple Email Service.
 
 ## Installation
 
@@ -13,9 +13,8 @@ git clone https://github.com/coloredcow/sespress.git
 cd wp-content/plugins/sespress
 composer install
 ```
-2. Enable plugin from the WordPress Admin Dashboard
-3. Go to menu `Settings > SesPress`
-4. Enter your AWS key ID, secret key and region to confirm credentials.
+3. Activate SesPress plugin from the WordPress Admin Dashboard
+4. Once activated, go to menu `Settings > SesPress`. Enter your AWS key ID, secret key and region to confirm credentials.
 
 ## Usage
 
@@ -27,24 +26,28 @@ Add the following snippet at the end of your active theme's `functions.php`. Cha
 add_action( 'wp', 'sespress_send_sample' );
 function sespress_send_sample() {
 
-	$args = [
-		'subject' => 'Welcome to SesPress',
-		'recipients' => [
-			[
-				'name' => 'Your Name',
-				'email' => 'yourname@example.com',
-			]
-		],
-		'sender' => [
-			'name' => 'Admin',
-			'email' => 'admin@example.com',
-		],
-		'message' => [
-			'html' => '<h2>Some test message embedded in HTML tags.</h2>',
-		]
-	];
-	$sespress = new SesPress;
-	$result = $sespress->send( $args );
-	wp_die( $result['data'] );
+    $args = [
+        'subject' => 'Welcome to SesPress',
+        'recipients' => [
+            [
+                'name' => 'John Doe',
+                'email' => 'johndoe@example.com',
+            ],
+            [
+                'name' => 'Jane Doe',
+                'email' => 'janedoe@example.com',
+            ],
+        ],
+        'sender' => [
+            'name' => 'Admin',
+            'email' => 'admin@mysite.com',
+        ],
+        'message' => [
+            'html' => '<h2>Test message embedded in HTML tags.</h2>',
+        ]
+    ];
+    $sespress = new SesPress;
+    $result = $sespress->send( $args );
+    wp_die( $result['data'] );
 }
 ```
