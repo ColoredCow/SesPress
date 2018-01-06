@@ -13,5 +13,5 @@
 
 defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
 
-require_once 'classes/class-ses-press.php';
+require_once 'classes/class-sespress.php';
 require_once 'admin/settings.php';

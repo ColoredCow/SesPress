@@ -1,6 +1,6 @@
 <?php
 /**
- * Main file for Ses_Press class
+ * Main file for SesPress class
  *
  * @package ColoredCow
  * @subpackage SES
@@ -14,10 +14,10 @@ use Aws\Ses\Exception\SesException;
 use Aws\Ses\SesClient;
 
 /**
- * Class Ses_Press
+ * Class SesPress
  * Primary wrapper around Amazon SESClient to instantiate and trigger mails
  */
-class Ses_Press {
+class SesPress {
 	protected $recipients, $subject, $message, $from;
 
 	/**
@@ -64,10 +64,10 @@ class Ses_Press {
 
 		$client = SesClient::factory(array(
 			'version' => 'latest',
-			'region' => get_option( 'ses_press_region' ),
+			'region' => get_option( 'sespress_region' ),
 			'credentials' => array(
-				'key'    => get_option( 'ses_press_aws_access_key_id' ),
-				'secret' => get_option( 'ses_press_aws_secret_access_key' ),
+				'key'    => get_option( 'sespress_aws_access_key_id' ),
+				'secret' => get_option( 'sespress_aws_secret_access_key' ),
 			),
 		));
 
@@ -92,7 +92,7 @@ class Ses_Press {
 						'Data' => $sespress->subject,
 					],
 				],
-				'Source' => $sespress->from ? $sespress->from : get_option( 'ses_press_default_sender' ),
+				'Source' => $sespress->from ? $sespress->from : get_option( 'sespress_default_sender' ),
 			]);
 			$message_id = $result->get( 'MessageId' );
 			return array(
@@ -118,7 +118,7 @@ class Ses_Press {
 	 * @return boolean
 	 */
 	protected static function are_mails_enabled() {
-		return 'on' === get_option( 'ses_press_enable_mails' );
+		return 'on' === get_option( 'sespress_enable_mails' );
 	}
 
 	/**
@@ -138,7 +138,7 @@ class Ses_Press {
 	 * @return boolean
 	 */
 	protected static function is_test_mode() {
-		return 'on' === get_option( 'ses_press_test_mode' );
+		return 'on' === get_option( 'sespress_test_mode' );
 	}
 
 	/**
@@ -147,7 +147,7 @@ class Ses_Press {
 	 * @return string
 	 */
 	protected static function get_test_mode_recipient_name() {
-		return get_option( 'ses_press_test_mode_recipient_name' );
+		return get_option( 'sespress_test_mode_recipient_name' );
 	}
 
 	/**
@@ -156,7 +156,7 @@ class Ses_Press {
 	 * @return string
 	 */
 	protected static function get_test_mode_recipient_email() {
-		return get_option( 'ses_press_test_mode_recipient_email' );
+		return get_option( 'sespress_test_mode_recipient_email' );
 	}
 
 	/**
