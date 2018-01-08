@@ -17,11 +17,46 @@ use Aws\Ses\SesClient;
  * Primary wrapper around Amazon SESClient to instantiate and trigger mails
  */
 class SesPress {
-	protected $recipients, $subject, $message, $from;
+	/**
+	 * Defines the recipients of current instance.
+	 *
+	 * @since 0.1
+	 * @access protected
+	 * @var array
+	 */
+	protected $recipients;
+
+	/**
+	 * Defines the subject of current instance.
+	 *
+	 * @since 0.1
+	 * @access protected
+	 * @var string
+	 */
+	protected $subject;
+
+	/**
+	 * Defines the message body of current instance.
+	 *
+	 * @since 0.1
+	 * @access protected
+	 * @var string
+	 */
+	protected $message;
+
+	/**
+	 * Defines the sender of current instance.
+	 *
+	 * @since 0.1
+	 * @access protected
+	 * @var string
+	 */
+	protected $from;
 
 	/**
 	 * Method to send mail using SES
 	 *
+	 * @since 0.1
 	 * @param array $args    Mail configurations.
 	 * @return array
 	 */
@@ -89,6 +124,8 @@ class SesPress {
 	/**
 	 * Method to set configurations for current instance
 	 *
+	 * @since 0.1
+	 * @access protected
 	 * @param array $args    Array of configurations to set.
 	 * @return void
 	 */
@@ -123,6 +160,8 @@ class SesPress {
 	/**
 	 * Static method to check if mails are enabled
 	 *
+	 * @since 0.1
+	 * @access protected
 	 * @return boolean
 	 */
 	protected static function are_mails_enabled() {
@@ -132,6 +171,8 @@ class SesPress {
 	/**
 	 * Static method to format address using name and email
 	 *
+	 * @since 0.1
+	 * @access protected
 	 * @param string $name    Name of recipient/sender.
 	 * @param string $email    Email of recipient/sender.
 	 * @return string
@@ -143,6 +184,8 @@ class SesPress {
 	/**
 	 * Static method to check if test mode is enabled
 	 *
+	 * @since 0.1
+	 * @access protected
 	 * @return boolean
 	 */
 	protected static function is_test_mode() {
@@ -152,6 +195,8 @@ class SesPress {
 	/**
 	 * Static method to fetch test mode recipient name configured from WP Dashboard.
 	 *
+	 * @since 0.1
+	 * @access protected
 	 * @return string
 	 */
 	protected static function get_test_mode_recipient_name() {
@@ -161,6 +206,8 @@ class SesPress {
 	/**
 	 * Static method to fetch test mode recipient email configured from WP Dashboard.
 	 *
+	 * @since 0.1
+	 * @access protected
 	 * @return string
 	 */
 	protected static function get_test_mode_recipient_email() {
@@ -170,6 +217,8 @@ class SesPress {
 	/**
 	 * Method to get subject of current instance
 	 *
+	 * @since 0.1
+	 * @access protected
 	 * @return string
 	 */
 	protected function get_subject() {
@@ -179,6 +228,8 @@ class SesPress {
 	/**
 	 * Method to set subject of current instance
 	 *
+	 * @since 0.1
+	 * @access protected
 	 * @param string $subject    Subject string.
 	 * @return void
 	 */
@@ -193,6 +244,8 @@ class SesPress {
 	/**
 	 * Method to get message body of current instance based on message type.
 	 *
+	 * @since 0.1
+	 * @access protected
 	 * @param string $type    Type of message to return Possible values: html (default) or text.
 	 * @return string
 	 */
@@ -203,6 +256,8 @@ class SesPress {
 	/**
 	 * Method to set message for current instance.
 	 *
+	 * @since 0.1
+	 * @access protected
 	 * @param string $message    Message string.
 	 * @param string $type     Message type. Possible values: html (default) or type.
 	 * @return void
@@ -218,6 +273,8 @@ class SesPress {
 	/**
 	 * Method to get an array of recipients set for current instance
 	 *
+	 * @since 0.1
+	 * @access protected
 	 * @return array
 	 */
 	protected function get_recipients() {
@@ -227,6 +284,8 @@ class SesPress {
 	/**
 	 * Method to set recipients for current instance
 	 *
+	 * @since 0.1
+	 * @access protected
 	 * @param array $recipients    Recipients to set.
 	 * @return void
 	 */
@@ -243,6 +302,8 @@ class SesPress {
 	/**
 	 * Method to set sender of current instance
 	 *
+	 * @since 0.1
+	 * @access protected
 	 * @return array
 	 */
 	protected function get_sender() {
@@ -252,6 +313,8 @@ class SesPress {
 	/**
 	 * Method to set sender of current mail instance
 	 *
+	 * @since 0.1
+	 * @access protected
 	 * @param string $sender    Sender string. Should be formatted before.
 	 * @return void
 	 */
@@ -262,6 +325,8 @@ class SesPress {
 	/**
 	 * Method to set mail template
 	 *
+	 * @since 0.1
+	 * @access protected
 	 * @param string $template_name    Path of the template.
 	 * @param array  $args    Dynamic values to be inserted in the mail template.
 	 * @return boolean
