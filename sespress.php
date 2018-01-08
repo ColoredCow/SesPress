@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Plugin Name: SesPress
  * Plugin URI: https://coloredcow.com/wordpress
@@ -6,9 +7,13 @@
  * Version: 1.0
  * Author: ColoredCow
  * Author URI: https://coloredcow.com
+ * License:           GPL-3.0+
+ * License URI:    http://gnu.org/licenses/gpl-3.0.txt
+ * Text Domain:       sespress
  *
- * @package ColoredCow
- * @subpackage SesPress
+ * @since 0.1
+ *
+ * @package SesPress
  */
 
 defined( 'ABSPATH' ) || die( 'No script kiddies please!' );

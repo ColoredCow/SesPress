@@ -2,8 +2,7 @@
 /**
  * Main file for SesPress class
  *
- * @package ColoredCow
- * @subpackage SES
+ * @package SesPress
  */
 
 define( 'CHARSET', 'UTF-8' );

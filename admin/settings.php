@@ -2,8 +2,7 @@
 /**
  * Main file for SesPress WP Admin Page
  *
- * @package ColoredCow
- * @subpackage SES
+ * @package SesPress
  */
 
 /**
