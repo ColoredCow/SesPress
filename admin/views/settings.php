@@ -14,9 +14,9 @@
 	<form action="options.php" method="POST">
 		<?php settings_fields( 'sespress_options_group' ); ?>
 		<div>
-			<label for="sespress_enable_mails">
+			<label for="sespress_enable_emails">
 				Enable functionality:
-				<input type="checkbox" name="sespress_enable_mails" id="sespress_enable_mails" <?php echo 'on' === get_option( 'sespress_enable_mails' ) ? 'checked' : ''; ?>>
+				<input type="checkbox" name="sespress_enable_emails" id="sespress_enable_emails" <?php echo 'on' === get_option( 'sespress_enable_emails' ) ? 'checked' : ''; ?>>
 			</label>
 		</div>
 		<br>

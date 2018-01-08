@@ -12,7 +12,6 @@
  * Text Domain:       sespress
  *
  * @since 0.1
- *
  * @package SesPress
  */
 

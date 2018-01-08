@@ -111,7 +111,7 @@ class SesPress {
 		} catch ( SesException $error ) {
 			return array(
 				'success' => false,
-				'data' => $error->getAwsErrorMessage(),
+				'data' => 'aws: ' . $error->getAwsErrorMessage(),
 			);
 		} catch ( Exception $error ) {
 			return array(
@@ -131,11 +131,11 @@ class SesPress {
 	 */
 	protected function set_configurations( $args ) {
 		$this->set_subject( $args['subject'] );
-		$this->set_sender( self::get_formatted_address( $args['sender']['name'], $args['sender']['email'] ) );
+		$this->set_sender( self::get_formatted_address( sanitize_text_field( $args['sender']['name'] ), sanitize_email( $args['sender']['email'] ) ) );
 
 		$recipients = [];
 		foreach ( $args['recipients'] as $recipient ) {
-			array_push( $recipients, self::get_formatted_address( $recipient['name'], $recipient['email'] ) );
+			array_push( $recipients, self::get_formatted_address( sanitize_text_field( $recipient['name'] ), sanitize_email( $recipient['email'] ) ) );
 		}
 		$this->set_recipients( $recipients );
 
@@ -165,7 +165,7 @@ class SesPress {
 	 * @return boolean
 	 */
 	protected static function are_mails_enabled() {
-		return 'on' === get_option( 'sespress_enable_mails' );
+		return 'on' === get_option( 'sespress_enable_emails' );
 	}
 
 	/**
@@ -178,7 +178,7 @@ class SesPress {
 	 * @return string
 	 */
 	protected static function get_formatted_address( $name, $email ) {
-		return $name . ' <' . $email . '>';
+		return sanitize_text_field( $name ) . ' <' . sanitize_email( $email ) . '>';
 	}
 
 	/**
@@ -200,7 +200,7 @@ class SesPress {
 	 * @return string
 	 */
 	protected static function get_test_mode_recipient_name() {
-		return get_option( 'sespress_test_mode_recipient_name' );
+		return sanitize_text_field( get_option( 'sespress_test_mode_recipient_name' ) );
 	}
 
 	/**
@@ -211,7 +211,7 @@ class SesPress {
 	 * @return string
 	 */
 	protected static function get_test_mode_recipient_email() {
-		return get_option( 'sespress_test_mode_recipient_email' );
+		return sanitize_email( get_option( 'sespress_test_mode_recipient_email' ) );
 	}
 
 	/**
@@ -234,6 +234,7 @@ class SesPress {
 	 * @return void
 	 */
 	protected function set_subject( $subject ) {
+		$subject = sanitize_text_field( $subject );
 		if ( self::is_test_mode() ) {
 			$this->subject = 'Test - ' . $subject;
 			return;
@@ -263,6 +264,7 @@ class SesPress {
 	 * @return void
 	 */
 	protected function set_message( $message, $type = 'html' ) {
+		$type = sanitize_text_field( $type );
 		if ( 'text' === strtolower( $type ) ) {
 			$this->message['text'] = $message;
 		} else {
@@ -332,7 +334,7 @@ class SesPress {
 	 * @return boolean
 	 */
 	protected function set_mail_template( $template_name, $args = [] ) {
-
+		$template_name = sanitize_text_field( $template_name );
 		$template_path = locate_template( array( $template_name ), false, true );
 		if ( ! $template_path ) {
 			return false;
@@ -340,8 +342,8 @@ class SesPress {
 
 		$template = array();
 		foreach ( $args as $variable => $value ) {
-			$variable = preg_replace( '/\s+/', '_', trim( $variable ) );
-			$template[ $variable ] = $value;
+			$variable = preg_replace( '/\s+/', '_', trim( sanitize_text_field( $variable ) ) );
+			$template[ $variable ] = sanitize_text_field( $value );
 		}
 
 		try {
