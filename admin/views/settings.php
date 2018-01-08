@@ -1,47 +1,14 @@
 <?php
 /**
- * Main file for SesPress WP Admin Page
+ * Sespress admin settings page view
  *
- * @package SesPress
+ * @since 0.1
+ * @package @Sespress
  */
 
-/**
- * Function to create the settings page for our plugin
- */
-function sespress_init() {
-	add_options_page( 'SES Settings', 'SesPress', 'manage_options', 'sespress', 'sespress_menu_init' );
-}
-add_action( 'admin_menu', 'sespress_init' );
-
-/**
- * Function to register plugin settings
- */
-function sespress_register_settings() {
-	add_option( 'sespress_region' );
-	add_option( 'sespress_default_sender' );
-	add_option( 'sespress_enable_mails' );
-	add_option( 'sespress_aws_access_key_id' );
-	add_option( 'sespress_aws_secret_access_key' );
-	add_option( 'sespress_test_mode' );
-	add_option( 'sespress_test_mode_recipient_name' );
-	add_option( 'sespress_test_mode_recipient_email' );
-	register_setting( 'sespress_options_group', 'sespress_region' );
-	register_setting( 'sespress_options_group', 'sespress_default_sender' );
-	register_setting( 'sespress_options_group', 'sespress_enable_mails' );
-	register_setting( 'sespress_options_group', 'sespress_aws_access_key_id' );
-	register_setting( 'sespress_options_group', 'sespress_aws_secret_access_key' );
-	register_setting( 'sespress_options_group', 'sespress_test_mode' );
-	register_setting( 'sespress_options_group', 'sespress_test_mode_recipient_name' );
-	register_setting( 'sespress_options_group', 'sespress_test_mode_recipient_email' );
-}
-add_action( 'admin_init', 'sespress_register_settings' );
-
-/**
- * Function to print plugin page
- */
-function sespress_menu_init() {
 ?>
-	<div class="wrap">
+
+<div class="wrap">
 	<h2>AWS SES configurations</h2>
 	<br>
 	<form action="options.php" method="POST">
@@ -108,6 +75,4 @@ function sespress_menu_init() {
 		<br>
 		<?php submit_button( 'Update settings' ); ?>
 	</form>
-	</div>
-<?php
-}
+</div>
