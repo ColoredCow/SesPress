@@ -1,2 +1,9 @@
 vendor/
 .DS_Store
+
+node_modules/
+.sass-cache
+
+admin/style.css
+admin/style.css.map
+admin/main.js
