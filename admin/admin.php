@@ -42,3 +42,12 @@ add_action( 'admin_init', 'sespress_register_settings' );
 function sespress_menu_init() {
 	include_once 'views/settings.php';
 }
+
+/**
+ * Function to enqueue custom stylesheet
+ */
+function sespress_load_styles() {
+	wp_enqueue_style( 'sespress-css', plugin_dir_url( __FILE__ ) . 'style.css', array(), filemtime( plugin_dir_path( __FILE__ ) . 'style.css' ), 'all' );
+}
+add_action( 'admin_enqueue_scripts', 'sespress_load_styles' );
+

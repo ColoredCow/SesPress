@@ -16,7 +16,7 @@ module.exports = function (grunt) {
 
             build: {
 
-                src: 'src/scripts/*.js',
+                src: 'src/js/*.js',
 
                 dest: 'main.js'
 
@@ -36,7 +36,7 @@ module.exports = function (grunt) {
 
                 files: {
 
-                    'style.css': 'src/styles/style.scss',
+                    'style.css': 'src/css/style.scss',
 
                 }
 
@@ -50,9 +50,9 @@ module.exports = function (grunt) {
 
                 files: [
 
-                  'src/scripts/*.js',
+                  'src/js/*.js',
 
-                  'src/styles/*.scss',
+                  'src/css/*.scss',
 
                 ],
 

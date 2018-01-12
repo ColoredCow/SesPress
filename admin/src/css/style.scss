@@ -1,3 +1,12 @@
-.sespress{
+.sespress-settings{
     -webkit-font-smoothing: antialiased;
+
+    .header {
+        margin-bottom: 30px !important;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 15px;
+    }
 }
