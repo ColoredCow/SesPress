@@ -101,7 +101,7 @@ class SesPress {
 						'Data' => $this->subject,
 					],
 				],
-				'Source' => $this->from ? $this->from : get_option( 'sespress_default_sender' ),
+				'Source' => $this->from ? $this->from : self::get_default_sender(),
 			]);
 			$message_id = $result->get( 'MessageId' );
 			return array(
@@ -131,7 +131,10 @@ class SesPress {
 	 */
 	protected function set_configurations( $args ) {
 		$this->set_subject( $args['subject'] );
-		$this->set_sender( self::get_formatted_address( sanitize_text_field( $args['sender']['name'] ), sanitize_email( $args['sender']['email'] ) ) );
+
+		if ( isset( $args['sender'] ) && isset( $args['sender']['name'] ) && isset( $args['sender']['email'] ) ) {
+			$this->set_sender( self::get_formatted_address( sanitize_text_field( $args['sender']['name'] ), sanitize_email( $args['sender']['email'] ) ) );
+		}
 
 		$recipients = [];
 		foreach ( $args['recipients'] as $recipient ) {
@@ -355,5 +358,14 @@ class SesPress {
 		} catch ( Exception $error ) {
 			return $error->getMessage();
 		}
+	}
+
+	/**
+	 * Method to return default sender configured from Admin Dashboard.
+	 *
+	 * @return string
+	 */
+	protected static function get_default_sender() {
+		return self::get_formatted_address( get_option( 'sespress_default_sender_name' ), get_option( 'sespress_default_sender_email' ) );
 	}
 }

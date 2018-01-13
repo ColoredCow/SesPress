@@ -32,9 +32,13 @@
 				<option value="us-west-2" <?php echo 'us-west-2' === get_option( 'sespress_region' ) ? 'selected' : ''; ?> >US WEST (Oregon)</option>
 			</select>
 		</label>
-		<label for="sespress_default_sender">
+		<label for="sespress_default_sender_name">
 			Default sender (can be overridden from code):
-			<input type="text" name="sespress_default_sender" id="sespress_default_sender" value="<?php echo esc_attr( get_option( 'sespress_default_sender' ) ); ?>" placeholder="admin@example.com">
+			<input type="text" name="sespress_default_sender_name" id="sespress_default_sender_name" value="<?php echo esc_attr( get_option( 'sespress_default_sender_name' ) ); ?>" placeholder="Administrator">
+		</label>
+		<label for="sespress_default_sender_email">
+			Default sender (can be overridden from code):
+			<input type="email" name="sespress_default_sender_email" id="sespress_default_sender_email" value="<?php echo esc_attr( get_option( 'sespress_default_sender_email' ) ); ?>" placeholder="admin@example.com">
 		</label>
 		<label for="sespress_test_mode">
 			Enable Test Mode:

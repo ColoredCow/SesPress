@@ -20,7 +20,8 @@ function sespress_register_settings() {
 
 	$options = array(
 		'region',
-		'default_sender',
+		'default_sender_name',
+		'default_sender_email',
 		'enable_emails',
 		'aws_access_key_id',
 		'aws_secret_access_key',
@@ -51,3 +52,33 @@ function sespress_load_styles() {
 }
 add_action( 'admin_enqueue_scripts', 'sespress_load_styles' );
 
+
+/**
+ * Function to show notice
+ */
+function sespress_configuration_notice() {
+
+	$options = array(
+		'region',
+		'default_sender_name',
+		'default_sender_email',
+		'aws_access_key_id',
+		'aws_secret_access_key',
+	);
+	$invalid = false;
+	foreach ( $options as $option ) {
+		$option = 'sespress_' . $option;
+		if ( ! get_option( $option ) ) {
+			$invalid = true;
+			break;
+		}
+	}
+	if ( $invalid ) :
+	?>
+	<div class="notice notice-error">
+		<p><?php esc_html_e( 'SesPress configurations are incomplete! Please configure them.', 'sespress' ); ?></p>
+	</div>
+	<?php
+	endif;
+}
+add_action( 'admin_notices', 'sespress_configuration_notice' );
