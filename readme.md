@@ -1,4 +1,6 @@
-# SesPress
+![sespress-min](https://user-images.githubusercontent.com/12053186/37273426-d000bde4-25ff-11e8-954e-b2be52a83fb0.png)
+
+## About
 
 WordPress plugin to send emails using Amazon's Simple Email Service.
 
